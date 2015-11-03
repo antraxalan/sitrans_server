@@ -16,6 +16,9 @@ if(isset($_POST['info'])){
 	$info 		= $_POST['info'];
 }
 
+$fecha=date('d/m/Y');
+$fecha='22/08/2013';
+
 switch ($info) {
 
 
@@ -135,7 +138,7 @@ switch ($info) {
 			from detalle 
 			where codconcepto=1800 and tipodcto=40
 			and codcliente=13
-			and fecha='22-08-2013'
+			and fecha='$fecha'
 			order by CodConcepto,CodCliente,CodArt");
 $datos->execute();
 
