@@ -136,11 +136,77 @@ switch ($info) {
 		$array  = substr($array, 0, -1);
 		$array1 = explode("|", $array);
 		$array2 = array_chunk($array1, 18);
+
+		foreach ($array2 as $value) {
+			
+			$aux=explode(' ', $value[3]);
+			$value[3]=$aux[0];
+			$value[3]=implode('-', array_reverse(explode('-', $value[3])));
+
+			$aux=explode(' ', $value[4]);
+			$value[4]=$aux[0];
+			$value[4]=implode('-', array_reverse(explode('-', $value[4])));
+
+			// $cont=$value[3];
+			// $datos = $db->prepare('INSERT INTO probando VALUES(:id, :cont, :fecha)');
+			// $datos->execute(array(':id' => $id, ':cont' => $cont, ':fecha' => $value[4]));
+
+			// $datos = $db->prepare('INSERT INTO probando_detalle VALUES(:TipoDcto, :NroDcto, :Apu, :Fecha, :FechaVto, :TipoDctoM, :NroDctoM, :Precio, :Tc, :CodConcepto, :CodCliente, :Debe, :Haber, :CodArt, :Dcajas, :Hcajas, :Dunidades, :Hunidades)');
+			// $datos->execute(array('TipoDcto' => $value[0], 'NroDcto' => $value[1], 'Apu' => $value[2], 'Fecha' => $value[3], 'FechaVto' => $value[4], 'TipoDctoM' => $value[5], 'NroDctoM' => $value[6], 'Precio' => $value[7], 'Tc' => $value[8], 'CodConcepto' => $value[9], 'CodCliente' => $value[10], 'Debe' => $value[11], 'Haber' => $value[12], 'CodArt' => $value[13], 'Dcajas' => $value[14], 'Hcajas' => $value[15], 'Dunidades' => $value[16], 'Hunidades' => $value[17]));
+		}
+
 		$cont=count($array2);
 
+		// $d = [1, 'alan', '23-05-2016'];
+		// $data = array_fill(0, 2, $d);
+		// $verificar = $db->query("SELECT count(*) FROM Personal WHERE CodPersonal= '$codigo' and CI='$password'")->fetchColumn();
+		// $query = "SELECT * FROM table";
+		// $sth = $db->query($query);
+		// $result = $sth->fetchAll();
 
-		$datos = $db->prepare('INSERT INTO probando VALUES(:id, :cont, :fecha)');
-		$datos->execute(array(':id' => $id, ':cont' => $cont, ':fecha' => $fecha));
+		// $query="INSERT INTO probando ( id, cont, fecha ) VALUES";
+		// 	// "INSERT INTO MyTable ( Column1, Column2 ) VALUES
+		// 	// ( Value1, Value2 ), ( Value1, Value2 )"
+		$len=10000;
+		// for ($i=0; $i < $len; $i++) { 
+		// 		// $query .= " ('$id','$i','$fecha')," 
+		// 	$datos = $db->prepare('INSERT INTO probando VALUES(:id, :cont, :fecha)');
+		// 	$datos->execute(array(':id' => $i, ':cont' => '2', ':fecha' =>'01/01/1999' ));
+		// }
+		// 	$query  = substr($query, 0, -1);
+		// 	// $query="INSERT INTO probando ( id, cont, fecha ) VALUES";
+		// 	$sth = $db->query($query);
+		// $result = $sth->fetchAll();
+		// $i=5;
+
+
+		 // $db->query("INSERT INTO probando ( id, cont, fecha ) VALUES(1,'2','02-02-2016');")->fetchColumn();
+		// $db->exec("INSERT INTO probando ( id, cont, fecha ) VALUES(10,'2','02-02-2016')");
+
+		// $datos = $db->prepare("INSERT INTO probando ( id, cont, fecha ) VALUES(100,'2','01/01/1999'),(100,'2','01/01/1999')");
+		// $datos->execute();
+		$query="INSERT INTO probando ( id, cont, fecha )";
+
+		for ($i=0; $i < $len; $i++) { 
+			if(($i+1)!=$len){
+				$query.=" SELECT $i,'2','01/01/1999' UNION ALL ";
+			}else{
+				$query.=" SELECT $i,'2','01/01/1999'";				
+			}
+
+		}
+		$datos = $db->prepare($query);
+		$datos->execute();
+
+
+		// $query = "INSERT INTO probando VALUES('$id','$i','$fecha')";
+		// $db->query($query);
+		// $result = $sth->fetchAll();
+
+
+
+		// $datos = $db->prepare('INSERT INTO probando VALUES(:id, :cont, :fecha)');
+		// $datos->execute(array(':id' => $id, ':cont' => $cont, ':fecha' => $fecha));
 
 
 
