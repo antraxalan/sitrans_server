@@ -2,6 +2,7 @@
 // error_reporting(0);
 ob_start();
 session_start();
+date_default_timezone_set('America/La_Paz');
 require("conection.php");
 // $Nombre		= $_POST['var1'];
 if(isset($_POST['codigo'])){
@@ -90,6 +91,7 @@ switch ($info) {
 
 				$datos = $db->prepare('INSERT INTO SincDetalle VALUES(:CodSincDetalle,:TipoDcto, :NroDcto, :Apu, :Fecha, :FechaVto, :TipoDctoM, :NroDctoM, :Precio, :Tc, :CodConcepto, :CodCliente, :Debe, :Haber, :CodArt, :Dcajas, :Hcajas, :Dunidades, :Hunidades, :FechaCarga)');
 				$datos->execute(array('CodSincDetalle' => $id,'TipoDcto' => $value[0], 'NroDcto' => $value[1], 'Apu' => $value[2], 'Fecha' => $value[3], 'FechaVto' => $value[4], 'TipoDctoM' => $value[5], 'NroDctoM' => $value[6], 'Precio' => $value[7], 'Tc' => $value[8], 'CodConcepto' => $value[9], 'CodCliente' => $value[10], 'Debe' => $value[11], 'Haber' => $value[12], 'CodArt' => $value[13], 'Dcajas' => $value[14], 'Hcajas' => $value[15], 'Dunidades' => $value[16], 'Hunidades' => $value[17], 'FechaCarga' => $fecha));
+				$id++;
 
 			}
 		}
@@ -164,6 +166,7 @@ switch ($info) {
 
 				$datos = $db->prepare('INSERT INTO SincMaestro VALUES(:CodSincMaestro, :TipoDcto, :NroDcto, :Fecha, :FechaVto, :Obs, :CodCliente, :Conteo, :FechaCarga)');
 				$datos->execute(array('CodSincMaestro' => $id,'TipoDcto' => $value[0], 'NroDcto' => $value[1], 'Fecha' => $value[2], 'FechaVto' => $value[3], 'Obs' => $value[4], 'CodCliente' => $value[5], 'Conteo' => $value[6], 'FechaCarga' => $fecha));
+				$id++;
 				
 			}
 		}
