@@ -3,7 +3,13 @@
 ob_start();
 session_start();
 require("conection.php");
+date_default_timezone_set('America/La_Paz');
 // $Nombre		= $_POST['var1'];
+$codigo='';
+$password='';
+$info='';
+$codigo_ruta='';
+
 if(isset($_POST['codigo'])){
 	$codigo 	= $_POST['codigo'];
 }
@@ -16,14 +22,34 @@ if(isset($_POST['info'])){
 	$info 		= $_POST['info'];
 }
 
+if(isset($_POST['codigo_ruta'])){
+	$codigo_ruta 		= $_POST['codigo_ruta'];
+}
 // $fecha=date('d/m/Y');
 $fecha='22/08/2013';
 
+if($info=='cliente'){
+	$id_c  = $db->query("SELECT max(IdCarga) FROM LogCargaParaApp")->fetchColumn();
+	if($id_c == ''){
+		$id_c = 1;
+	}else{
+		$id_c = $id_c + 1;
+	}
+	$fecha_hora=date('d/m/Y').' '.date('h:i:s a');
+	$CodRuta=null;
+	if($codigo_ruta=='a'||$codigo_ruta=='b'){
+		$CodTipoCarga=$codigo_ruta;
+	}else{
+		$CodTipoCarga='c';
+		$CodRuta=$codigo_ruta;
+	}
+	$insertando = $db->prepare('INSERT INTO LogCargaParaApp VALUES(:IdCarga,:CodPersonal,:FechaCarga,:Info,:CodTipoCarga,:CodRuta)');
+	$insertando->execute(array(':IdCarga' => $id_c,':CodPersonal' => $codigo,':FechaCarga' => $fecha_hora,':Info' => $info,':CodTipoCarga' => $CodTipoCarga,':CodRuta' => $CodRuta));
+}
+
+
+
 switch ($info) {
-
-
-
-
 
 	case "verificar":
 	$verificar = $db->query("SELECT count(*) FROM Personal WHERE CodPersonal= '$codigo' and CI='$password'")->fetchColumn();
@@ -158,28 +184,28 @@ echo json_encode($array2);
 }
 break;
 
-	case "maestro":
-	$verificar = $db->query("SELECT count(*) FROM Personal WHERE CodPersonal= '$codigo' and CI='$password'")->fetchColumn();
-	if($verificar > 0)
-	{
-		$datos = $db->prepare("SELECT a.TipoDcto TipoDcto,a.NroDcto NroDcto,a.Fecha Fecha,a.FechaVto FechaVto,'Saldo deuda' Obs,a.CodCliente CodCliente,count(*) Conteo
-from maestro a inner join  detalle b on a.tipodcto=b.tipodctom and a.nrodcto=b.nrodctom and codconcepto=1400
-group by a.TipoDcto,a.NroDcto,a.Fecha,a.FechaVto,a.CodCliente
-order by tipodcto,nrodcto");
+case "maestro":
+$verificar = $db->query("SELECT count(*) FROM Personal WHERE CodPersonal= '$codigo' and CI='$password'")->fetchColumn();
+if($verificar > 0)
+{
+	$datos = $db->prepare("SELECT a.TipoDcto TipoDcto,a.NroDcto NroDcto,a.Fecha Fecha,a.FechaVto FechaVto,'Saldo deuda' Obs,a.CodCliente CodCliente,count(*) Conteo
+		from maestro a inner join  detalle b on a.tipodcto=b.tipodctom and a.nrodcto=b.nrodctom and codconcepto=1400
+		group by a.TipoDcto,a.NroDcto,a.Fecha,a.FechaVto,a.CodCliente
+		order by tipodcto,nrodcto");
 
-$datos->execute();
+	$datos->execute();
 
-$articulos='';
-while($row = $datos->fetch()) {
-	for ($i=0; $i < 7; $i++) { 
-		$articulos.=$row[$i].'@';
+	$articulos='';
+	while($row = $datos->fetch()) {
+		for ($i=0; $i < 7; $i++) { 
+			$articulos.=$row[$i].'@';
+		}
 	}
-}
-$array  = substr($articulos, 0, -1);
-$array1 = explode("@", $array);
-$array2 = array_chunk($array1, 7);
+	$array  = substr($articulos, 0, -1);
+	$array1 = explode("@", $array);
+	$array2 = array_chunk($array1, 7);
 
-echo json_encode($array2);
+	echo json_encode($array2);
 }
 break;
 
